@@ -1,0 +1,210 @@
+using System;
+using System.Collections.Generic;
+
+public class Node
+{
+    public int Value { get; set; }
+    public Node Left { get; set; }
+    public Node Right { get; set; }
+
+    public Node(int value)
+    {
+        Value = value;
+        Left = null;
+        Right = null;
+    }
+}
+
+public class BinarySearchTree
+{
+    private Node _root;
+
+    public void Add(int value)
+    {
+        var newNode = new Node(value);
+        Add(newNode);
+    }
+
+    private void Add(Node node)
+    {
+        if (_root == null)
+        {
+            _root = node;
+            return;
+        }
+
+        Node current = _root;
+        Node parent = null;
+
+        while (current != null)
+        {
+            parent = current;
+            if (node.Value < current.Value)
+                current = current.Left;
+            else
+                current = current.Right;
+        }
+
+
+        node.Left = null;
+        node.Right = null;
+
+        if (node.Value < parent.Value)
+            parent.Left = node;
+        else
+            parent.Right = node;
+    }
+
+
+
+
+
+
+    private Node _Contains(int value, int flag = 0)
+    {
+        Node node = null;
+        Node parent = null;
+        Node current = _root;
+        while (current != null)
+        {
+            parent = current;
+
+            if (value < current.Value)
+            {
+                current = current.Left;
+            }
+            else
+            {
+                current = current.Right;
+            }
+
+            if (current != null && value == current.Value)
+            {
+                node = current;
+                if (flag == 1) { node = parent; }
+                break;
+            }
+
+        }
+        return node;
+    }
+
+    public bool Contains(int value)
+    {
+        if (_Contains(value) != null) { return true; }
+        return false;
+    }
+
+
+    public void Del(int value)
+    {
+        RemoveHelper(_root, value);
+    }
+
+    private Node RemoveHelper(Node root, int value)
+    {
+
+
+        if (root == null)
+            return root;
+
+        if (value < root.Value)
+            root.Left = RemoveHelper(root.Left, value);
+
+        else if (value > root.Value)
+        {
+            root.Right = RemoveHelper(root.Right, value);
+        }
+
+
+        else
+        {
+
+            if (root.Left == null && root.Right == null)
+            {
+
+                root = null;
+            }
+
+            else if (root.Left != null && root.Right != null)
+            {
+                var maxNode = FindMax(root.Right);
+
+                root.Value = maxNode.Value;
+                root.Right = RemoveHelper(root.Right, maxNode.Value);
+            }
+
+            else
+            {
+                var child = root.Left != null ? root.Left : root.Right;
+                root = child;
+            }
+
+        }
+        return root;
+    }
+    private Node FindMax(Node node)
+    {
+        while (node.Left != null)
+        {
+            node = node.Left;
+        }
+        return node;
+    }
+    public void InOrderTraversal(Node node)
+    {
+        if (node == null) return;
+
+        InOrderTraversal(node.Left);
+        Console.Write(node.Value + " ");
+        InOrderTraversal(node.Right);
+    }
+
+
+    public void BFS()
+    {
+        InOrderTraversal(_root);
+    }
+
+    private void DFS()
+    {
+        var queue = new Queue<Node>(new[] { _root });
+        while (queue.Count > 0)
+        {
+            var node = queue.Dequeue();
+            Console.Write(node.Value);
+            if (node.Left != null) { queue.Enqueue(node.Left); }
+            if (node.Right != null) { queue.Enqueue(node.Right); }
+        }
+        Console.WriteLine();
+    }
+
+
+
+    static void Main(string[] args)
+    {
+        BinarySearchTree tree = new BinarySearchTree();
+
+        tree.Add(10);
+        tree.Add(9);
+        tree.Add(8);
+        tree.Add(7);
+
+
+        tree.Add(6);
+        tree.Add(5);
+
+        tree.Del(8);
+
+        Console.WriteLine("Построенный двоичное дерево:");
+        tree.DFS();
+        Console.WriteLine("-----Построенный двоичное дерево:");
+        tree.BFS();
+        Console.WriteLine();
+        Console.WriteLine(tree.Contains(10));
+        Console.WriteLine(tree.Contains(7));
+
+
+
+    }
+}
