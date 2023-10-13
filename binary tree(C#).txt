@@ -161,18 +161,18 @@ public class BinarySearchTree
     }
 
 
-    public void BFS()
+    public void DFS()
     {
         InOrderTraversal(_root);
     }
 
-    private void DFS()
+    private void BFS()
     {
         var queue = new Queue<Node>(new[] { _root });
         while (queue.Count > 0)
         {
             var node = queue.Dequeue();
-            Console.Write(node.Value);
+            Console.Write(node.Value + " ");
             if (node.Left != null) { queue.Enqueue(node.Left); }
             if (node.Right != null) { queue.Enqueue(node.Right); }
         }
@@ -197,14 +197,13 @@ public class BinarySearchTree
 
 
 
-
-        Console.WriteLine("Построенный двоичное дерево:");
-        tree.DFS();
-        Console.WriteLine("-----Построенный двоичное дерево:");
+        Console.WriteLine("Traversing a binary tree in width:");
         tree.BFS();
+        Console.WriteLine("Traversing the binary tree in depth:");
+        tree.DFS();
         Console.WriteLine();
-        Console.WriteLine(tree.Contains(10));
-        Console.WriteLine(tree.Contains(7));
+        Console.WriteLine(tree.Contains(9));
+
 
 
 
