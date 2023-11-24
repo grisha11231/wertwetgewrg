@@ -1,0 +1,82 @@
+using System;
+using System.Data.SqlTypes;
+using System.Linq;
+using System.Runtime.InteropServices;
+
+class Hello
+{
+    struct Node
+    {
+        public Node(int _back, int _leng, char _ch)
+        {
+            back = _back;
+            leng = _leng;
+            ch = _ch;   
+        }
+        public int back;
+        public int leng;
+        public char ch;
+    }
+
+
+
+    static void LZ77(string str, List<Node> list)
+    {
+        str += '&';
+        string buffer = "";
+        string tmp_buffer = "";
+        int I = 0;
+        while (true)
+        {
+            if (!buffer.Contains(tmp_buffer + str[I]))
+            {
+                if (tmp_buffer == "")
+                {
+                    list.Add(new Node(0, 0, str[I]));
+                    buffer += str[I];
+                }
+                else
+                {
+                    int K = 0;
+                    while(!buffer.Substring(buffer.Length - K, K).Contains(tmp_buffer))
+                    {
+                        K++;
+                    }
+                    list.Add(new Node(K, tmp_buffer.Length, str[I]));
+                    buffer += tmp_buffer + str[I];
+                    tmp_buffer = "";
+                }
+            }
+            else
+            {
+                tmp_buffer += str[I];
+            }
+            if (str[I] == '&') { break; }
+            I++;
+        }
+    }
+
+
+   static void Print(List<Node> list)
+    {
+        foreach(Node N in list)
+        {
+            Console.WriteLine(N.back + ", " + N.leng + ", " + N.ch);
+        }
+    }
+
+
+    static void Main()
+    {
+        string str = "";                      
+        List<Node> CODE = new List<Node>();
+        LZ77(str, CODE);
+        Print(CODE);
+    }
+}
+
+
+
+
+
+
