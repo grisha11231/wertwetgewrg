@@ -1,0 +1,73 @@
+using System;
+using System.IO;
+using System.Collections.Generic;
+class LZW {
+    
+    
+    
+  static void Main() {
+    char[] ch=null;
+    List<string> slovar = new List<string>();
+    List<int> kod = new List<int>();
+    List<string> w = new List<string>();
+    
+    int dictionary = 256;
+    
+    string slovo = Console.ReadLine();
+    Console.WriteLine(slovo);
+    
+    ch = slovo.ToCharArray();
+    
+    string comp;
+    for (int i = 0; i <= ch.Length - 1; i++)
+    {
+        
+        
+        if(i < ch.Length - 1){comp = $"{ch[i]}{ch[i+1]}";}
+        else{comp = $"{ch[ch.Length - 1]}";}
+        
+        
+        if(!slovar.Contains(comp)){
+            w.Add($"0|{ch[i]}");
+        }
+        else{
+            int a = 0;
+            for (int j = 0; j < slovar.Count - 1; j++){
+                if(slovar[j] == comp){ a = j; break;}
+            }
+            w.Add("" + kod[a]);
+            comp += ch[i+2];
+            i++;
+        }
+        
+        
+        
+        
+        slovar.Add(comp);
+        dictionary++;
+        kod.Add(dictionary);
+    }
+    
+    
+    //comp = $"{ch[ch.Length - 1]}";
+    //slovar.Add(comp);
+    //dictionary++;
+    //kod.Add(dictionary);
+    
+    foreach (var slovof in slovar)
+    {
+        Console.Write(slovof + "\t");
+    }
+    Console.WriteLine();
+    foreach (var kodf in kod)
+    {
+        Console.Write(kodf + "\t");
+    }
+    Console.WriteLine();
+    foreach (var wf in w)
+    {
+        Console.Write(wf + "\t");
+    }
+    //Console.WriteLine(slovar[0]);
+  }
+}
