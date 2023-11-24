@@ -1,0 +1,73 @@
+using System;
+using System.IO;
+using System.Collections.Generic;
+class LZ78
+{
+
+
+
+    static void Main()
+    {
+        char[] ch = null;
+        List<string> slovar = new List<string>();
+        List<int> kod = new List<int>();
+        List<string> w = new List<string>();
+
+        int dictionary = 0;
+
+        string slovo = "красная краска";
+        Console.WriteLine(slovo);
+
+        ch = slovo.ToCharArray();
+
+        string comp;
+        for (int i = 0; i < ch.Length - 1; i++)
+        {
+
+
+            comp = $"{ch[i]}";
+
+
+
+            if (!slovar.Contains(comp))
+            {
+                w.Add($"0|{ch[i]}");
+            }
+            else
+            {
+                int a = 0;
+                for (int j = 0; j < slovar.Count - 1; j++)
+                {
+                    if (slovar[j] == comp) { a = j; break; }
+                }
+                w.Add($"{kod[a]}|{ch[i+1]}");
+                comp += ch[i + 1];
+                i++;
+            }
+
+
+            //w.Add("" + kod[a]);
+
+            slovar.Add(comp);
+            dictionary++;
+            kod.Add(dictionary);
+        }
+
+
+       
+        foreach (var slovof in slovar)
+        {
+            Console.Write(slovof + "\t");
+        }
+        Console.WriteLine();
+        foreach (var kodf in kod)
+        {
+            Console.Write(kodf + "\t");
+        }
+        Console.WriteLine();
+        foreach (var wf in w)
+        {
+            Console.Write(wf + "\t");
+        }
+    }
+}
