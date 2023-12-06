@@ -1,0 +1,84 @@
+#include <string>
+#include <iostream>
+
+using namespace std;
+
+string dictionary, buffer, input;
+int i = 0;
+int CheckCounter = 0;
+int Skip = 0;
+int Byte = 8;
+int MatchIndex = 0;
+bool MatchIndexFound;
+bool MatchFound;
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    dictionary.resize(8);
+    buffer.resize(5);
+    input = "КРАСНАЯ КРАСКА";
+    dictionary = "********";
+    for (int i = 0; i < buffer.length(); i++) {
+        input+=" ";
+    }
+    for (int i = 0; i < 5; i++) {
+        buffer[i] = input[i];
+    }
+
+    cout << "Словарь\t" << "Буффер\t" << "Код\t"<<"Длина кода" << endl;
+    cout<<dictionary << "\t" << buffer<<"  "<< "0 " << buffer[0]<<" "<<Byte+1<< endl;;
+    
+
+
+
+    for (int i = 0; i < input.length() - 6; i++) {
+        Byte = 8;
+        MatchIndex = -1;
+        MatchIndexFound = false;
+ 
+        for (int step = 0; step < 7; step++) {
+            dictionary[step] = dictionary[step + 1];
+            if (step == 6) {
+                dictionary[step + 1] = buffer[0];
+            }
+        }
+
+        for (int step = 0; step < 4; step++) {
+            buffer[step] = buffer[step + 1];
+            if (step == 3) {
+                buffer[step + 1] = input[i + 5];
+            }
+
+        }
+        if (buffer[0] != dictionary[0]) {
+            cout << dictionary << "\t" << buffer<<"  ";
+            MatchFound = false;
+            for (int Check1 = 0; Check1 < dictionary.length(); Check1++) {
+                if (dictionary[Check1] == buffer[0]) {
+                    MatchIndex = Check1;
+                    break;
+                }
+            }
+
+
+
+            if (MatchIndex != -1)
+                cout << "1<" << MatchIndex << " " <<"1> " << Byte - 1 << endl;
+            else cout << "0 " << buffer[0]<<" "<<Byte+1<< endl;
+
+        }
+        if (buffer[0] == dictionary[0] && MatchFound == false) {
+            for (int Check1 = 0; Check1 < buffer.length(); Check1++)
+            {
+                if (buffer[Check1] == dictionary[Check1])
+                    Skip++;
+                else break;
+            }
+            MatchFound = true;
+            MatchIndex = 0;
+            cout << dictionary << "\t" << buffer<<"  1<"<<MatchIndex<< " " << Skip<<"> "<< Byte - 1 << endl;
+            Skip = 0;
+        }
+
+    }
+}

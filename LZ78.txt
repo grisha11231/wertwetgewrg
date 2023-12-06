@@ -1,0 +1,40 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+string input, buffer;
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	input = "КРАСНАЯ КРАСКА";
+	buffer.resize(input.length());
+	int Count = 1;
+
+	cout << "Словарь\tКод\tПозиция в словаре" << endl;
+	cout << "\t\t0" << endl;
+	for (int i = 0; i < input.length(); i++)
+		
+	{
+		char Match = ' ';
+		int MatchIndex = -1;
+		for (int Check = 0; Check < buffer.length(); Check++) {
+			if (input[i] == buffer[Check]) {
+				MatchIndex = Check;
+				Match = buffer[Check];
+				break;
+			}
+		}
+		if (MatchIndex == -1) {
+			buffer[i] = input[i];
+			cout << input[i] << "\t <0, " << input[i] << ">\t" << Count << endl;;
+			Count++;
+		}
+		else {
+			i++;
+			cout << Match << input[i] <<"\t <" << MatchIndex+1 << ", " << input[i] << ">\t " << Count << endl;
+			Count++;
+			
+		}
+	}
+}
