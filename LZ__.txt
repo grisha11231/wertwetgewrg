@@ -1,0 +1,331 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace шифрока
+{
+    class Program
+    {  public class shif
+        {
+           public int offset ;
+           public int length ;
+           public string next;
+            
+        }
+       
+      static public void LZ77 ()
+        {
+        
+            List<shif> ans = new List<shif>();
+            string buff = null;
+            Console.WriteLine("Введите слово");
+           string g = Console.ReadLine();
+            int posSlov = 1;
+            
+            
+            buff =   g.Substring(0, 1);
+            shif H = new shif();
+            
+            H.next = g.Substring(0,1);
+            H.length = 0;
+            H.offset = 0;
+          
+            ans.Add(H);
+            while (posSlov < g.Length)
+            {
+
+                int l;
+                
+               for ( l =  Math.Min(buff.Length, g.Length - posSlov); l >= 1; l-- )
+                {
+
+                  string subst =  g.Substring(posSlov, l);
+                  int indx = buff.IndexOf(subst);
+                  
+                    if(indx != -1)
+                    {
+                        indx = 8 - buff.Length + indx;
+                        shif sub = new shif();
+                        sub.offset = indx;
+                        sub.length = l;
+                       
+                        if(posSlov + l > g.Length - 1)
+                        {
+
+                            if (buff.Length >= 8)
+                            {
+                                buff = buff.Remove(0, subst.Length);
+                                // buff = s;
+                            }
+                            sub.offset = 0;
+                            sub.length = 0;
+                            sub.next = g.Substring(posSlov , 1);
+                            buff = buff + sub.next;
+                            ans.Add(sub);
+                            posSlov = posSlov + l + 1;
+                            break;
+                        }
+                     
+                        else
+                        sub.next = g.Substring(posSlov + l , 1);
+                        if (buff.Length + subst.Length >= 8)
+                        {
+                            if (buff.Length == 8)
+                            {
+                                buff = buff.Remove(0, sub.next.Length + subst.Length);
+                            }
+                            else
+                            { 
+                            
+                                buff = buff.Remove(0, (sub.next.Length + subst.Length) - buff.Length );
+
+                            
+                        }
+                        // buff = s;
+                    }
+                        posSlov = posSlov + l + 1;
+                        buff = buff + subst+ sub.next;
+                        ans.Add(sub);
+                        break;
+                        
+                    }
+                }
+                 if(l == 0 )
+                {
+                    shif r = new shif();
+                    r.next = g.Substring(posSlov, 1);
+                    r.length = 0;
+                    r.offset = 0;
+                    if (buff.Length >= 8)
+                    {
+                        buff = buff.Remove(0, 1);
+                    }
+                    ans.Add(r);
+                    buff = buff + g.Substring(posSlov, 1);
+                    posSlov = posSlov + 1;
+                }
+                    
+
+                
+             
+                 
+                
+                
+            }
+
+
+            foreach( var s in ans)
+            {
+                Console.WriteLine($"{s.offset},{s.length},{s.next}");
+            }
+        }
+        
+        public class code
+
+        {
+          public  string name;
+            public int pov;
+        }
+        static public void LZ78()
+        {
+           
+            Console.WriteLine("Введите слово");
+            string g = Console.ReadLine();
+            string buff = null;
+            List<code> cod = new List<code>();
+            Dictionary<string, int> dictinory = new Dictionary<string, int>();
+            int posih = 2;
+       buff = buff + g.Substring(0, 1);
+            dictinory.Add(g.Substring(0, 1), 1);
+            code one = new code();
+            one.name = g.Substring(0, 1);
+            one.pov = 0;
+            cod.Add(one);
+          while (posih < g.Length+1)
+            {
+                int l;
+                for (l = Math.Min(buff.Length, g.Length - (posih-1)); l >= 1;  l--)
+                {
+                    string sub = g.Substring(posih-1, l);
+                        if (dictinory.ContainsKey(sub))
+                        {
+                            if (posih > g.Length - 1)
+                            {
+                                code chare = new code();
+                                int b = dictinory[sub];
+                                chare.pov = b;
+                                cod.Add(chare);
+                                dictinory.Add(  " ",l + 1);
+                                posih = posih + sub.Length;
+                                break;
+                            }
+                            else
+                        {
+                            int b = dictinory[sub];
+                            code chare = new code();
+                            chare.name = g.Substring(posih - 1 + l, 1);
+                            chare.pov = b;
+                            cod.Add(chare );
+                            dictinory.Add(sub + g.Substring(posih - 1 + l, 1), posih  - 1);
+                            buff = buff + sub + g.Substring(posih - 1 + l, 1);
+                            posih = posih + sub.Length + 1;
+                            break;
+                        }
+
+
+                        }
+                }
+                if (l == 0)
+                {
+                    code chare = new code();
+                    dictinory.Add(g.Substring(posih -1, 1), posih);
+                    chare.name = g.Substring(posih - 1, 1);
+                    chare.pov = 0;
+                    cod.Add(chare);
+                    buff = buff + g.Substring(posih - 1, 1);
+                    posih = posih + 1;
+                    
+                } 
+            }
+            foreach (var s in cod)
+            {
+                Console.WriteLine($"{s.pov},{s.name}");
+            }
+        }
+       
+        static public void LZSS()
+        {
+
+            List<shif> ans = new List<shif>();
+            string buff = null;
+            Console.WriteLine("Введите слово");
+            string g = Console.ReadLine();
+            int posSlov = 1;
+
+
+            buff = buff + g.Substring(0, 1);
+            shif H = new shif();
+
+            H.next = g.Substring(0, 1);
+            H.length = 0;
+            H.offset = 0;
+
+            ans.Add(H);
+            while (posSlov < g.Length)
+            {
+
+                int l;
+
+                for (l = Math.Min(buff.Length, g.Length - posSlov); l >= 1; l--)
+                {
+
+                    string subst = g.Substring(posSlov, l);
+                    int indx = buff.IndexOf(subst);
+                    if (indx != -1)
+                    {
+                        indx = 8 - buff.Length + indx;
+                        shif sub = new shif();
+                        sub.offset = indx;
+                        sub.length = l;
+                        if (posSlov + l > g.Length - 1)
+                        {
+                            if (buff.Length + subst.Length >= 8)
+                            {
+                                buff = buff.Remove(0, subst.Length);
+                                // buff = s;
+                            }
+
+                            buff = buff + sub.next;
+                            ans.Add(sub);
+                            posSlov = posSlov + l ;
+                            break;
+                        }
+                        else
+                            sub.next = g.Substring(posSlov + l, 1);
+                        if (buff.Length + subst.Length >= 8)
+                        {
+                            buff = buff.Remove(0, subst.Length);
+                            // buff = s;
+                        }
+                        posSlov = posSlov + l ;
+                        buff = buff + subst;
+                        ans.Add(sub);
+                        break;
+
+                    }
+                }
+                if (l == 0)
+                {
+                    shif r = new shif();
+                    r.next = g.Substring(posSlov, 1);
+                    r.length = 0;
+                    r.offset = 0;
+                    if (buff.Length  >= 8)
+                    {
+                        buff = buff.Remove(0, 1);
+                    }
+                    ans.Add(r);
+                    buff = buff + g.Substring(posSlov, 1);
+                    posSlov = posSlov + 1;
+                }
+
+
+
+
+
+
+
+            }
+
+
+            foreach (var s in ans)
+            {
+                if(s.length != 0)
+                {
+                    Console.WriteLine($"1<{s.offset},{s.length}>");
+                }
+                else
+                {
+                    Console.WriteLine($"'0',{s.next}");
+                }
+
+            }
+        }
+
+        static public void Shif()
+        {
+            Console.WriteLine(" LZ77 - 1. LZSS - 2.LZ78 - 3.Выход - другая любая клавиша");
+        go:
+
+            int l = Convert.ToInt32(Console.ReadLine());
+
+            switch (l)
+            {
+                case 1:
+                    LZ77();
+                    goto go;
+                case 2:
+                    LZSS();
+
+
+
+                    goto go;
+                case 3:
+                    LZ78();
+                    goto go;
+
+                default:
+
+                    break;
+            }
+        
+
+    }
+        static void Main(string[] args)
+        {
+            Shif();
+        }
+    }
+}
