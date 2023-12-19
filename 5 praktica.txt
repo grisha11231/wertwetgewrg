@@ -1,0 +1,1011 @@
+
+
+using System;
+
+class praktica_5
+{
+    public class Node
+    {
+        public int Value { get; set; }
+        public Node Left { get; set; }
+        public Node Right { get; set; }
+
+        public Node(int value)
+        {
+            Value = value;
+            Left = null;
+            Right = null;
+        }
+    }
+
+    public class BinarySearchTree
+    {
+        private Node _root;
+
+        public void Add(int value)
+        {
+            var newNode = new Node(value);
+            Add(newNode);
+        }
+
+        private void Add(Node node)
+        {
+            if (_root == null)
+            {
+                _root = node;
+                return;
+            }
+
+            Node current = _root;
+            Node parent = null;
+
+            while (current != null)
+            {
+                parent = current;
+                if (node.Value < current.Value)
+                    current = current.Left;
+                else
+                    current = current.Right;
+            }
+
+
+            node.Left = null;
+            node.Right = null;
+
+            if (node.Value < parent.Value)
+                parent.Left = node;
+            else
+                parent.Right = node;
+        }
+
+
+
+
+
+
+        private Node _Contains(int value, int flag = 0)
+        {
+            Node node = null;
+            Node parent = null;
+            Node current = _root;
+            while (current != null)
+            {
+                parent = current;
+
+                if (value < current.Value)
+                {
+                    current = current.Left;
+                }
+                else
+                {
+                    current = current.Right;
+                }
+
+                if (current != null && value == current.Value)
+                {
+                    node = current;
+                    if (flag == 1) { node = parent; }
+                    break;
+                }
+
+            }
+            return node;
+        }
+
+        public bool Contains(int value)
+        {
+            if (_Contains(value) != null) { return true; }
+            return false;
+        }
+
+
+        public void Del(int value)
+        {
+            RemoveHelper(_root, value);
+        }
+
+        private Node RemoveHelper(Node root, int value)
+        {
+
+
+            if (root == null)
+                return root;
+
+            if (value < root.Value)
+                root.Left = RemoveHelper(root.Left, value);
+
+            else if (value > root.Value)
+            {
+                root.Right = RemoveHelper(root.Right, value);
+            }
+
+
+            else
+            {
+
+                if (root.Left == null && root.Right == null)
+                {
+
+                    root = null;
+                }
+
+                else if (root.Left != null && root.Right != null)
+                {
+                    var maxNode = FindMax(root.Right);
+
+                    root.Value = maxNode.Value;
+                    root.Right = RemoveHelper(root.Right, maxNode.Value);
+                }
+
+                else
+                {
+                    var child = root.Left != null ? root.Left : root.Right;
+                    root = child;
+                }
+
+            }
+            return root;
+        }
+        private Node FindMax(Node node)
+        {
+            while (node.Left != null)
+            {
+                node = node.Left;
+            }
+            return node;
+        }
+        public void InOrderTraversal(Node node)
+        {
+            if (node == null) return;
+
+            InOrderTraversal(node.Left);
+            Console.Write(node.Value + " ");
+            InOrderTraversal(node.Right);
+        }
+
+
+        public void DFS()
+        {
+            InOrderTraversal(_root);
+        }
+
+        public void BFS()
+        {
+            var queue = new Queue<Node>(new[] { _root });
+            while (queue.Count > 0)
+            {
+                var node = queue.Dequeue();
+                Console.Write(node.Value + " ");
+                if (node.Left != null) { queue.Enqueue(node.Left); }
+                if (node.Right != null) { queue.Enqueue(node.Right); }
+            }
+            Console.WriteLine();
+        }
+    }
+    static void BinarTree()
+    {
+        BinarySearchTree tree = new BinarySearchTree();
+
+        Console.WriteLine("Бинарное дерево.");
+        Console.WriteLine("1 - Добавить");
+        Console.WriteLine("2 - Удалить");
+        Console.WriteLine("3 - Обход бинарного дерева в ширину.");
+        Console.WriteLine("4 - Обход бинарного дерева в глубину");
+        Console.WriteLine("5 - Проверка на наличие числа.");
+        Console.WriteLine("Exit");
+
+        bool oops = true;
+        do
+        {
+            string ch = Console.ReadLine();
+            switch (ch)
+            {
+                case "1":
+                    int number = Convert.ToInt32(Console.ReadLine());
+                    tree.Add(number);
+                    Console.WriteLine(number + " - добавлено");
+                    Console.WriteLine("---------------------------------------------");
+                    break;
+                case "2":
+                    int number1 = Convert.ToInt32(Console.ReadLine());
+                    tree.Del(number1);
+                    Console.WriteLine(number1 + " - удалено");
+                    Console.WriteLine("---------------------------------------------");
+                    break;
+                case "3":
+                    Console.Write("Обход бинарного дерева в ширину:");
+                    tree.BFS();
+                    Console.WriteLine("---------------------------------------------");
+                    break;
+                case "4":
+                    Console.Write("Обход бинарного дерева в глубину:");
+                    tree.DFS();//выполнение симметричного обхода в глубину
+                    Console.WriteLine();
+                    Console.WriteLine("---------------------------------------------");
+                    break;
+                case "5":
+                    Console.WriteLine(tree.Contains(9));
+                    break;
+                default: Console.WriteLine("Такой команды нет"); break;
+                case "Exit":
+                    oops = false;
+                    Console.WriteLine("Вы покинулу дерево.");
+                    Console.WriteLine("---------------------------------------------");
+                    break;
+            }
+        } while (oops);
+    }
+    //=================================================================================================
+
+
+    static void Smej()
+    {
+        Console.Write("Кол-во пар вершин: ");
+        int x = int.Parse(Console.ReadLine());
+        int y = 2;
+        Console.WriteLine("Заполни матрицу");
+        int[,] arr = new int[x, y];
+        for (int i = 0; i < x; i++)
+        {
+            for (int j = 0; j < y; j++)
+            {
+                Console.Write("arr[" + i + "," + j + "]: ");
+                arr[i, j] = int.Parse(Console.ReadLine());
+            }
+        }
+        Console.WriteLine("----------------------");
+
+        for (int i = 0; i < x; i++)
+        {
+            for (int j = 0; j < y; j++)
+            {
+                Console.WriteLine(" arr[" + i + "," + j + "]: " + arr[i, j]);
+            }
+            Console.WriteLine("----------------------");
+        }
+        Console.Write("Кол-во вершин: ");
+        int V = int.Parse(Console.ReadLine());
+        Console.WriteLine("Ввыберите ориентированный или неориентированый граф (Y/N): ");
+        string Chose = Console.ReadLine();
+
+        switch (Chose)
+        {
+            case "Y": //ориентированный
+                for (int i = 0; i < V; i++) //cписок
+                {
+                    Console.Write(i + " -> ");
+                    for (int j = 0; j < arr.GetLength(0); j++)
+                    {
+                        if (arr[j, 0] == i)
+                        {
+                            Console.Write(arr[j, 1] + " ");
+                        }
+                    }
+                    Console.WriteLine();
+                }
+                Console.WriteLine("----------------------");
+                //----------------------------------------------------------------------
+                for (int i = 0; i < V; i++) //матрица смежности
+                {
+                    Console.Write("\t" + i);
+                }
+                Console.WriteLine();
+
+                for (int i = 0; i < V; i++) // вертикаль
+                {
+                    Console.Write(i + "\t");
+                    for (int j = 0; j < V; j++) // горизонталь
+                    {
+                        int k = 0;
+                        for (int h = 0; h < arr.GetLength(0); h++)
+                        {
+                            if (i == arr[h, 0] && j == arr[h, 1]) { k++; }
+                        }
+                        Console.Write(k + "\t");
+                    }
+                    Console.WriteLine();
+                }
+
+                Console.WriteLine("----------------------");
+
+                Console.Write("\t");
+                for (int i = 0; i < arr.GetLength(0); i++) //матрица инцидентности
+                {
+                    Console.Write(arr[i, 0] + "-" + arr[i, 1] + "\t");
+                }
+
+                Console.WriteLine();
+                for (int i = 0; i < V; i++) // вертикаль
+                {
+                    Console.Write(i + "\t");
+                    for (int j = 0; j < arr.GetLength(0); j++) // горизонталь
+                    {
+                        int k = 0;
+                        if (arr[j, 0] == i) { k = 1; }
+                        else if (arr[j, 1] == i) { k = -1; }
+                        if (Chose == "N") { k *= k; }
+                        Console.Write(k + "\t");
+                    }
+                    Console.WriteLine();
+                }
+
+                break;
+            case "N": //неориентированный
+                for (int i = 0; i < V; i++) //cписок
+                {
+                    Console.Write(i + " : ");
+                    for (int j = 0; j < arr.GetLength(0); j++)
+                    {
+                        if (arr[j, 0] == i)
+                        {
+                            Console.Write(arr[j, 1] + " ");
+                        }
+                        if (arr[j, 1] == i)
+                        {
+                            Console.Write(arr[j, 0] + " ");
+                        }
+                    }
+                    Console.WriteLine();
+                }
+                Console.WriteLine("----------------------");
+                //----------------------------------------------------------------------
+                for (int i = 0; i < V; i++) //матрица смежности
+                {
+                    Console.Write("\t" + i);
+                }
+                Console.WriteLine();
+
+                for (int i = 0; i < V; i++) // вертикаль
+                {
+                    Console.Write(i + "\t");
+                    for (int j = 0; j < V; j++) // горизонталь
+                    {
+                        int k = 0;
+                        for (int h = 0; h < arr.GetLength(0); h++)
+                        {
+                            if (i == arr[h, 0] && j == arr[h, 1]) { k++; }
+                            if (i == arr[h, 1] && j == arr[h, 0]) { k++; }
+                        }
+                        Console.Write(k + "\t");
+                    }
+                    Console.WriteLine();
+                }
+
+                Console.WriteLine("----------------------");
+
+                Console.Write("\t");
+                for (int i = 0; i < arr.GetLength(0); i++) //матрица инцидентности
+                {
+                    Console.Write(arr[i, 0] + "-" + arr[i, 1] + "\t");
+                }
+
+                Console.WriteLine();
+                for (int i = 0; i < V; i++) // вертикаль
+                {
+                    Console.Write(i + "\t");
+                    for (int j = 0; j < arr.GetLength(0); j++) // горизонталь
+                    {
+                        int k = 0;
+                        if (arr[j, 0] == i) { k = 1; }
+                        else if (arr[j, 1] == i) { k = 1; }
+                        Console.Write(k + "\t");
+                    }
+                    Console.WriteLine();
+                }
+                break;
+        }
+
+    }
+    //=================================================================================================
+
+
+    public class ShannonFanoNode
+    {
+        public char Symbol { get; set; }
+        public double Probability { get; set; }
+        public string Code { get; set; }
+    }
+
+    public class ShannonFano
+    {
+        public List<ShannonFanoNode> EncodeFano(List<char> symbols, List<double> probabilities)
+        {
+            List<ShannonFanoNode> nodes = new List<ShannonFanoNode>();
+
+            // Создаем узлы для каждого символа с его вероятностью
+            for (int i = 0; i < symbols.Count; i++)
+            {
+                ShannonFanoNode node = new ShannonFanoNode
+                {
+                    Symbol = symbols[i],
+                    Probability = probabilities[i]
+                };
+                nodes.Add(node);
+            }
+
+            // Сортировка узлов по символу
+            nodes.Sort((x, y) => y.Probability.CompareTo(x.Probability));
+
+            // Рекурсивный вызов функции разделения
+            Split(nodes, 0, nodes.Count - 1);
+
+
+            return nodes;
+        }
+
+        private void Split(List<ShannonFanoNode> nodes, int start, int end)
+        {
+            if (start >= end)
+                return;
+
+            int mid = GetSplitIndex(nodes, start, end);
+
+            // Присваиваем коды "0" или "1" в зависимости от положения узла в отношении деления
+            for (int i = start; i <= end; i++)
+            {
+                if (i <= mid)
+                    nodes[i].Code += "0";
+                else
+                    nodes[i].Code += "1";
+            }
+
+            // Рекурсивно вызываем функцию для левой и правой части
+            Split(nodes, start, mid);
+            Split(nodes, mid + 1, end);
+        }
+
+        private int GetSplitIndex(List<ShannonFanoNode> nodes, int start, int end)
+        {
+            double sum1 = 0, sum2 = 0;
+            double allsum = 0;
+            int index1 = -1, index2 = -1;
+            for (int i = start; i <= end; i++)
+            {
+                allsum += nodes[i].Probability;
+            }
+
+            for (int i = start; i <= end; i++)
+            {
+                if (sum1 <= 0.5 * allsum)
+                    sum1 += nodes[i].Probability;
+                else break;
+
+                index1 = i;
+            }
+
+            for (int i = end; i >= start; i--)
+            {
+                if (sum2 <= 0.5 * allsum)
+                    sum2 += nodes[i].Probability;
+                else break;
+
+                index2 = i - 1;
+            }
+
+            double p1 = Math.Abs(0.5 * allsum - sum1);
+            double p2 = Math.Abs(0.5 * allsum - sum2);
+
+            if (p1 < p2)
+                return index1;
+            else if (p2 < p1)
+                return index2;
+            else return index1;
+        }
+    }
+
+
+
+
+
+    class HuffmanNode
+    {
+        public char Symbol { get; set; }
+        public double Frequency { get; set; }
+        public HuffmanNode Left { get; set; }
+        public HuffmanNode Right { get; set; }
+        public string Probability { get; set; }
+    }
+
+
+
+
+
+    class Huffman
+    {
+        public List<HuffmanNode> EncodeHuffman(List<char> symbols, List<double> probabilities)
+        {
+            Dictionary<char, double> symbolFrequencies = new Dictionary<char, double>();
+
+            for (int i = 0; i < symbols.Count; i++)
+            {
+                symbolFrequencies.Add(symbols[i], probabilities[i]);
+            }
+
+
+            HuffmanNode root = BuildHuffmanTree(symbolFrequencies);
+            Dictionary<char, string> codes = GenerateHuffmanCodes(root);
+
+            List<HuffmanNode> result = new List<HuffmanNode>();
+
+            foreach (var i in codes)
+            {
+                HuffmanNode node = new HuffmanNode();
+                node.Symbol = i.Key;
+                node.Probability = i.Value;
+                result.Add(node);
+            }
+            result.Sort((x, y) => x.Symbol.CompareTo(y.Symbol));
+
+            probabilities.Sort();
+            probabilities.Reverse();
+            int count = 0;
+            foreach (var i in result)
+            {
+                i.Frequency = probabilities[count];
+                count++;
+            }
+            return result;
+        }
+
+        static HuffmanNode BuildHuffmanTree(Dictionary<char, double> symbolFrequencies)
+        {
+            SortedList<double, HuffmanNode> nodes = new SortedList<double, HuffmanNode>();
+
+            double epsilon = 0.0001;
+
+            foreach (var symbolFrequency in symbolFrequencies)
+            {
+                double key = symbolFrequency.Value;
+                while (nodes.ContainsKey(key))
+                    key += epsilon;
+
+                nodes.Add(key, new HuffmanNode
+                {
+                    Symbol = symbolFrequency.Key,
+                    Frequency = symbolFrequency.Value
+                });
+            }
+
+            while (nodes.Count > 1)
+            {
+                HuffmanNode left = nodes.Values[0];
+                HuffmanNode right = nodes.Values[1];
+
+                HuffmanNode parent = new HuffmanNode
+                {
+                    Symbol = '\0',
+                    Frequency = left.Frequency + right.Frequency,
+                    Left = left,
+                    Right = right
+                };
+
+                nodes.RemoveAt(0);
+                nodes.RemoveAt(0);
+
+                double key = parent.Frequency;
+                while (nodes.ContainsKey(key))
+                    key += epsilon;
+
+                nodes.Add(key, parent);
+            }
+
+            return nodes.Values[0];
+        }
+
+        static Dictionary<char, string> GenerateHuffmanCodes(HuffmanNode root)
+        {
+            Dictionary<char, string> codes = new Dictionary<char, string>();
+            GenerateHuffmanCodesRecursive(root, "", codes);
+            return codes;
+        }
+
+        static void GenerateHuffmanCodesRecursive(HuffmanNode node, string code, Dictionary<char, string> codes)
+        {
+            if (node.Left == null && node.Right == null) // Если узел является листом, то это символ
+            {
+                codes.Add(node.Symbol, code);
+                return;
+            }
+
+            GenerateHuffmanCodesRecursive(node.Left, code + "0", codes);
+            GenerateHuffmanCodesRecursive(node.Right, code + "1", codes);
+        }
+    }
+
+    static void HufShan()
+    {
+        List<double> probabilities = new List<double>();
+
+        try
+        {
+            do
+            {
+                Console.WriteLine("Введите число");
+                probabilities.Add(Convert.ToDouble(Console.ReadLine()));
+            }
+            while (true);
+        }
+        catch (Exception) { };
+        char[] Alphabet = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+
+
+        List<char> symbols = new List<char>();
+        for (int i = 0; i < probabilities.Count; i++)
+        {
+            symbols.Add(Alphabet[i]);
+        }
+
+
+
+
+        ShannonFano shannonFano = new ShannonFano();
+        Huffman huffman = new Huffman();
+
+        List<ShannonFanoNode> encodedNodes1 = shannonFano.EncodeFano(symbols, probabilities);
+        List<HuffmanNode> encodedNodes2 = huffman.EncodeHuffman(symbols, probabilities);
+        Console.WriteLine("Кодировка Шенона-Фано\n");
+        Console.WriteLine("Символ\tВероятность\tКод");
+        Console.WriteLine("---------------------------");
+
+        foreach (var i in encodedNodes1)
+        {
+            Console.WriteLine($"{i.Symbol}\t{i.Probability}\t\t{i.Code}");
+        }
+        Console.WriteLine("---------------------------\n");
+        Console.WriteLine("Кодировка Хаффмана\n");
+        Console.WriteLine("Символ\tВероятность\tКод");
+        Console.WriteLine("---------------------------");
+
+        foreach (var i in encodedNodes2)
+        {
+            Console.WriteLine($"{i.Symbol}\t{i.Frequency}\t\t{i.Probability}");
+        }
+        Console.WriteLine("---------------------------");
+    }
+
+    //=====================================================================================================================
+    public class shif
+    {
+        public int offset;
+        public int length;
+        public string next;
+
+    }
+
+    static public void LZ77()
+    {
+
+        List<shif> list = new List<shif>();
+        string buff = null;
+        Console.Write("Введите слово: ");
+        string slovo = Console.ReadLine();
+        int posSlov = 1;
+
+
+        buff = slovo.Substring(0, 1);
+        shif H = new shif();
+
+        H.next = slovo.Substring(0, 1);
+        H.length = 0;
+        H.offset = 0;
+
+        list.Add(H);
+        while (posSlov < slovo.Length)
+        {
+
+            int l;
+
+            for (l = Math.Min(buff.Length, slovo.Length - posSlov); l >= 1; l--)
+            {
+
+                string subst = slovo.Substring(posSlov, l);
+                int indx = buff.IndexOf(subst);
+
+                if (indx != -1)
+                {
+                    indx = 8 - buff.Length + indx;
+                    shif sub = new shif();
+                    sub.offset = indx;
+                    sub.length = l;
+
+                    if (posSlov + l > slovo.Length - 1)
+                    {
+
+                        if (buff.Length >= 8)
+                        {
+                            buff = buff.Remove(0, subst.Length);
+                        }
+                        sub.offset = 0;
+                        sub.length = 0;
+                        sub.next = slovo.Substring(posSlov, 1);
+                        buff = buff + sub.next;
+                        list.Add(sub);
+                        posSlov = posSlov + l + 1;
+                        break;
+                    }
+
+                    else
+                        sub.next = slovo.Substring(posSlov + l, 1);
+                    if (buff.Length + subst.Length >= 8)
+                    {
+                        if (buff.Length == 8)
+                        {
+                            buff = buff.Remove(0, sub.next.Length + subst.Length);
+                        }
+                        else
+                        {
+                            buff = buff.Remove(0, (sub.next.Length + subst.Length) - buff.Length);
+                        }
+                    }
+                    posSlov = posSlov + l + 1;
+                    buff = buff + subst + sub.next;
+                    list.Add(sub);
+                    break;
+
+                }
+            }
+            if (l == 0)
+            {
+                shif r = new shif();
+                r.next = slovo.Substring(posSlov, 1);
+                r.length = 0;
+                r.offset = 0;
+                if (buff.Length >= 8)
+                {
+                    buff = buff.Remove(0, 1);
+                }
+                list.Add(r);
+                buff = buff + slovo.Substring(posSlov, 1);
+                posSlov = posSlov + 1;
+            }
+
+        }
+        foreach (var s in list)
+        {
+            Console.WriteLine($"{s.offset},{s.length},{s.next}");
+        }
+    }
+
+    static public void LZSS()
+    {
+
+        List<shif> ans = new List<shif>();
+        string buff = null;
+        Console.WriteLine("Введите слово");
+        string g = Console.ReadLine();
+        int posSlov = 1;
+
+
+        buff = buff + g.Substring(0, 1);
+        shif H = new shif();
+
+        H.next = g.Substring(0, 1);
+        H.length = 0;
+        H.offset = 0;
+
+        ans.Add(H);
+        while (posSlov < g.Length)
+        {
+
+            int l;
+
+            for (l = Math.Min(buff.Length, g.Length - posSlov); l >= 1; l--)
+            {
+
+                string subst = g.Substring(posSlov, l);
+                int indx = buff.IndexOf(subst);
+                if (indx != -1)
+                {
+                    indx = 8 - buff.Length + indx;
+                    shif sub = new shif();
+                    sub.offset = indx;
+                    sub.length = l;
+                    if (posSlov + l > g.Length - 1)
+                    {
+                        if (buff.Length + subst.Length >= 8)
+                        {
+                            buff = buff.Remove(0, subst.Length);
+                        }
+
+                        buff = buff + sub.next;
+                        ans.Add(sub);
+                        posSlov = posSlov + l;
+                        break;
+                    }
+                    else
+                        sub.next = g.Substring(posSlov + l, 1);
+                    if (buff.Length + subst.Length >= 8)
+                    {
+                        buff = buff.Remove(0, subst.Length);
+                    }
+                    posSlov = posSlov + l;
+                    buff = buff + subst;
+                    ans.Add(sub);
+                    break;
+
+                }
+            }
+            if (l == 0)
+            {
+                shif r = new shif();
+                r.next = g.Substring(posSlov, 1);
+                r.length = 0;
+                r.offset = 0;
+                if (buff.Length >= 8)
+                {
+                    buff = buff.Remove(0, 1);
+                }
+                ans.Add(r);
+                buff = buff + g.Substring(posSlov, 1);
+                posSlov = posSlov + 1;
+            }
+
+        }
+
+
+        foreach (var s in ans)
+        {
+            if (s.length != 0)
+            {
+                Console.WriteLine($"1<{s.offset},{s.length}>");
+            }
+            else
+            {
+                Console.WriteLine($"'0',{s.next}");
+            }
+
+        }
+    }
+
+    static void LZ78()
+    {
+        char[] ch = null;
+        List<string> slovar = new List<string>();
+        List<int> kod = new List<int>();
+        List<string> w = new List<string>();
+
+        int dictionary = 0;
+
+        string slovo = Console.ReadLine();
+        Console.WriteLine(slovo);
+
+        ch = slovo.ToCharArray();
+
+        string comp;
+        for (int i = 0; i < ch.Length - 1; i++)
+        {
+
+
+            comp = $"{ch[i]}";
+
+
+
+            if (!slovar.Contains(comp))
+            {
+                w.Add($"0|{ch[i]}");
+            }
+            else
+            {
+                int a = 0;
+                for (int j = 0; j < slovar.Count - 1; j++)
+                {
+                    if (slovar[j] == comp) { a = j; break; }
+                }
+                w.Add($"{kod[a]}|{ch[i + 1]}");
+                comp += ch[i + 1];
+                i++;
+            }
+
+
+            //w.Add("" + kod[a]);
+
+            slovar.Add(comp);
+            dictionary++;
+            kod.Add(dictionary);
+        }
+
+
+
+        foreach (var slovof in slovar)
+        {
+            Console.Write(slovof + "\t");
+        }
+        Console.WriteLine();
+        foreach (var kodf in kod)
+        {
+            Console.Write(kodf + "\t");
+        }
+        Console.WriteLine();
+        foreach (var wf in w)
+        {
+            Console.Write(wf + "\t");
+        }
+    }
+
+    static void LZ()
+    {
+        bool oops = true;
+
+        Console.WriteLine("Алгоритмы сжатия.");
+        Console.WriteLine("1 - LZ77");
+        Console.WriteLine("2 - LZSS");
+        Console.WriteLine("3 - LZ78");
+        Console.WriteLine("Exit");
+        Console.WriteLine("---------------------------------------------");
+
+        do
+        {
+            string ch = Console.ReadLine();
+            switch (ch)
+            {
+                case "1":
+                    LZ77();
+                    break;
+                case "2":
+                    LZSS();
+                    break;
+                case "3":
+                    Console.WriteLine("Введите слово");
+                    LZ78();
+                    break;
+                case "Exit":
+                    oops = false;
+                    Console.WriteLine("Вы покидаете алгоритмы сжатия.");
+                    break;
+                default:
+                    Console.WriteLine("Что-то пошло не так.");
+                    break;
+            }
+        } while (oops);
+    }
+    static void Main(string[] args)
+    {
+        bool oops = true;
+
+        Console.WriteLine("Циклическое меню.");
+        Console.WriteLine("1 - Бинарное дерево.");
+        Console.WriteLine("2 - Вывод списка смежности, матрицы смежности и матрицы инцидентности");
+        Console.WriteLine("3 - Метод Шеннона-Фэно и метод Хаффмена");
+        Console.WriteLine("4 - Алгоритмы LZ77, LZSS, LZ78");
+        Console.WriteLine("Exit");
+        Console.WriteLine("---------------------------------------------");
+
+        do
+        {
+            string ch = Console.ReadLine();
+            switch (ch)
+            {
+                case "1":
+                    BinarTree();
+                    break;
+                case "2":
+                    Smej();
+                    break;
+                case "3":
+                    Console.WriteLine("Для прекарщения ввода чисел введите букву F");
+                    HufShan();
+                    break;
+                case "4":
+                    LZ();
+                    break;
+                case "help":
+                    Console.WriteLine("1 - Бинарное дерево.");
+                    Console.WriteLine("2 - Вывод списка смежности, матрицы смежности и матрицы инцидентности");
+                    Console.WriteLine("3 - Метод Шеннона-Фэно и метод Хаффмена");
+                    Console.WriteLine("4 - Алгоритмы LZ77, LZSS, LZ78");
+                    Console.WriteLine("Exit");
+                    break;
+                case "Exit":
+                    oops = false;
+                    Console.WriteLine("Пока. >_<");
+                    break;
+                default:
+                    Console.WriteLine("Что-то пошло не так.");
+                    break;
+            }
+        } while (oops);
+    }
+
+}
+
+
